@@ -1,0 +1,35 @@
+/* Start with flagrantly-copying the style from the tutorial pages on modio, for consistency and because they look nice */
+body {
+    background-color: #12110f;
+    color: white;
+    font-family: BlinkMacSystemFont,-apple-system,"Segoe UI","Roboto","Oxygen","Ubuntu","Cantarell","Fira Sans","Droid Sans","Helvetica Neue","Helvetica","Arial",sans-serif
+}
+
+/* My own styles follow */
+a {
+    font-weight: 700;
+}
+
+.card {
+    color: black;
+    background-color: lightblue;
+    border-style: ridge;
+    border-radius: 0.5rem;
+}
+
+.card .card-content {
+    padding: 1rem;
+}
+
+div.code {
+    font-family:'Courier New', Courier, monospace;
+    border: 1px solid gray;
+    background-color: darkslategray;
+    padding: 0.25rem;
+    margin: 0.5rem;
+    white-space: pre;
+}
+
+span.code {
+    font-family: 'Courier New', Courier, monospace;
+}

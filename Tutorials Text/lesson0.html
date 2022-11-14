@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- Materialize -->
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+        <!-- Mine -->
+        <link type="text/css" rel="stylesheet" href="/css/main.css">
+
+        <!--Let browser know website is optimized for mobile-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+
+    <body>
+
+        <div class="container">
+            <h3>CoderTrevor's Adventures in Deep Rock Galactic Modding</h3>
+
+            <h4>Lesson 0: Gotta go fast!</h4>
+            <hr>
+
+            <p>By the end of this lesson, you'll have a development environment that lets you get into your mod with a simple hotkey.</p>
+
+            <p>In my opinion, having minimal time between making a change and seeing results is the secret sauce of an enjoyable software project. By putting a little bit of effort upfront, you'll be able to iterate on your mod quickly and avoid wasting time. It may seem like it only takes a little bit of time to package and run your project manually, but it adds up!</p>
+
+            <div class="card">
+                <div class="card-content">
+                    This lesson is Windows-specific, but the concepts will apply to any system. If you're on Mac or Linux, I recommend doing some <a href="https://google.com">research</a> and see what's available to speed up your workflow. Let me know what you find so I can update this guide.
+                </div>
+            </div>
+
+            <h5>Part 1: Setting up <a href="https://github.com/DRG-Modding/FSD-Template">FSD-Template</a> &amp; <a href="https://github.com/DRG-Modding/DRGModdingAutomationScripts">DRG modding automation scripts</a></h5>
+
+            <p>These repositories will do all of the heavy-lifting of setting up a project and getting it packaged and running quickly. Follow the instructions on the <a href="https://github.com/DRG-Modding/FSD-Template">FSD-Template</a> GitHub page to get started.</p>
+            <br>
+            <h6>Part 1a: Get the files onto your local machine.</h6>
+            <p>I think most of my audience is probably comfortable navigating GitHub and checking out projects. If that's not the case, let me know and I'll expand this section.</p>
+            <br>
+            <h6>Part 1b: Configure DRG modding automation scripts.</h6>
+
+            <p>This is really easy. First, navigate to your project folder and then open <span class="code">DRGModdingAutomationScripts\UtilityBats</span> and then run <span class="code">MakeDefaultConfigFiles.bat</span>.</span></p>
+            <p>Next, go up one folder and open <span class="code">Configs\LocalConfig.ini</span> in your favorite text editor.</p>
+
+            <p>Change the first line to <span class="code">ProjectFile=..\FSD.uproject</span>. Change the next two lines as needed. On my system, the file ends up looking like this:</p>
+            <div class="code">ProjectFile=..\FSD.uproject
+UnrealEngineLocation=C:\Program Files\Epic Games\UE_4.27\
+SteamInstall=C:\Program Files (x86)\Steam\steamapps\common\Deep Rock Galactic\</div>
+
+            <p>Now, go back to the <span class="code">DRGModdingAutomationScripts</span> directory and run <span class="code">QuickTestMod.bat</span>. When you see <span class="code">(F = file, D = directory)?</span> press "f". You should now see your mod launched!</p>
+
+            <h5>Part 2: Using <a href="https://www.autohotkey.com/">AutoHotkey</a> to launch with a hotkey</h5>
+
+            <p>Download and install <a href="https://www.autohotkey.com/download/">AutoHotkey</a>. Then, download and save <a href="files/QuickLaunch.ahk">this file</a> to your project directory.</p> For reference, here's the contents of this script:<div class="code">; The next four lines are providing by AHK when creating a new script
+#NoEnv ; Recommended for performance and compatibility with future AutoHotkey releases.
+#Warn ; Enable warnings to assist with detecting common errors.
+SendMode Input ; Recommended for new scripts due to its superior speed and reliability.
+SetWorkingDir %A_ScriptDir%\DRGModdingAutomationScripts ; Ensures a consistent starting directory.
+
+; If the active window belongs to the Unreal Editor
+#IfWinActive ahk_class UnrealWindow
+    ; Respond to ctrl-p
+    ^p::
+        Run, QuickTestMod.bat
+        WinWaitActive ahk_class ConsoleWindowClass
+        Send f
+    return
+            </div>
+
+            <p>After you run this script, when the Unreal Editor is open, if you press ctrl-p, you'll see that your mod will immediately be packed and launched!</p>
+
+            <p>A final note about Autohotkey - It's really cool and I encourage you to learn how to use it to automate your other tasks. However, with its functionality comes some downsides. It's a popular choice among cheaters, so I should let you know that if you find you can't launch some of your favorite games, check to make sure this script isn't running and exit it by right-clicking on the "H" icon in the taskbar.</p>
+
+            <br>
+            <h5>That's it! I hope you'll enjoy being able to launch your mods with next to no effort. Check out the next lesson when we get to some actual modding.</h5>
+            <br>
+            <button class="left"><a href="index.html">Home</a></button>
+            <button class="right"><a href="Next">Next -&gt;</a></button>
+            <br>
+            <br><br>
+            
+        </div>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    </body>
+</html>
