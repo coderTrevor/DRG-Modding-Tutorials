@@ -1,0 +1,3 @@
+[submodule "Tutorial-Project"]
+	path = Tutorial-Project
+	url = https://github.com/DRG-Modding/FSD-Template.git
