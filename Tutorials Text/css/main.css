@@ -33,3 +33,7 @@ div.code {
 span.code {
     font-family: 'Courier New', Courier, monospace;
 }
+
+strong {
+    font-weight: bold;
+}
