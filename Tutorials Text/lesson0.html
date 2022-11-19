@@ -26,10 +26,15 @@
 
             <div class="card">
                 <div class="card-content">
-                    This lesson is Windows-specific, but the concepts will apply to any system. If you're on Mac or Linux, I recommend doing some <a href="https://google.com">research</a> and seeing what's available to speed up your workflow. Please let me know what you find and I'll update this guide.
+                    This lesson is Windows-specific, but the concepts will apply to any system. If you're on Mac or Linux, I recommend doing some <a href="https://google.com">research</a> to see what's available to speed up your workflow. Please let me know what you find and I'll update this guide.
                 </div>
             </div>
-
+            <br>
+            <hr>
+            <p>If you get stuck anywhere along the way, <a href="https://github.com/coderTrevor/DRG-modding-tutorial-project/releases/download/Journey_0/Journey_0_Complete.zip">here</a> is how my project folder looks after completing this journey.
+                Note that you'll need to change <span class="code">DRGModdingAutomationScripts\Configs\LocalConfig.ini</span> to match the UE4 and DRG install paths on your system.</p>
+            <hr>
+            <br>
             <h5>Part 1: Setting up <a href="https://github.com/DRG-Modding/FSD-Template">FSD-Template</a> &amp; <a href="https://github.com/DRG-Modding/DRGModdingAutomationScripts">DRG modding automation scripts</a></h5>
 
             <p>These repositories will do all of the heavy-lifting of setting up a project and getting it packaged and running quickly. Follow the instructions on the <a href="https://github.com/DRG-Modding/FSD-Template">FSD-Template</a> GitHub page to get started.</p>
@@ -51,28 +56,47 @@ SteamInstall=C:\Program Files (x86)\Steam\steamapps\common\Deep Rock Galactic\</
 
             <h5>Part 2: Using <a href="https://www.autohotkey.com/">AutoHotkey</a> to launch your mod with a hotkey</h5>
 
-            <p>Download and install <a href="https://www.autohotkey.com/download/">AutoHotkey</a>. Then, download and save <a href="files/QuickLaunch.ahk">this file</a> to your project directory.</p> For reference, here's the contents of this script:<div class="code">; The next four lines are providing by AHK when creating a new script
+            <p>Download and install <a href="https://www.autohotkey.com/download/">AutoHotkey</a> version 1.1. Then, download and save <a href="files/QuickLaunch.ahk">this file</a> to your project directory.</p> For reference, here's the contents of this script:<div class="code">; The next four lines are providing by AHK when creating a new script
 #NoEnv ; Recommended for performance and compatibility with future AutoHotkey releases.
 #Warn ; Enable warnings to assist with detecting common errors.
 SendMode Input ; Recommended for new scripts due to its superior speed and reliability.
 SetWorkingDir %A_ScriptDir%\DRGModdingAutomationScripts ; Ensures a consistent starting directory.
 
+; This allows the script to be edited more easily while it's running. Ctrl-s will save it and reload it.
+~^s::
+	reload
+return
+
 ; If the active window belongs to the Unreal Editor
 #IfWinActive ahk_class UnrealWindow
-    ; Respond to ctrl-p
-    ^p::
-        Run, QuickTestMod.bat
-        WinWaitActive ahk_class ConsoleWindowClass
-        Send f
-    return
+	; Respond to win-p
+	#p::
+		; Assume the name of the folder this script is in describes the project and present a
+		; traytip to the user saying this project is being packed.
+		SplitPath, A_ScriptDir, dir,
+		TrayTip, Packing, %dir%
+		; Use DRGModdingAutomationScripts to pack and run the script
+		Run, QuickTestMod.bat
+		WinWaitActive ahk_class ConsoleWindowClass
+		Send f
+
+		; When the console window closes, stop displaying the tray tip
+		WinWaitNotActive ahk_class ConsoleWindowClass
+		TrayTip
+	return
             </div>
 
-            <p>When this script is running and the Unreal Editor is open, you can press ctrl-p and your mod will immediately be packed and launched!</p>
+            <p>When this script is running and the Unreal Editor is open, you can hold the windows key and press p and your mod will immediately be packed and launched!</p>
 
+            <div class="card">
+                <div class="card-content">
+                    I chose win-p as the hotkey in part because it doesn't do anything in the Unreal Editor. You can change the script and choose any hotkey you want. Check the <a href="https://www.autohotkey.com/docs/Tutorial.htm#s2">help for AutoHotkey</a> for more information on defining hotkeys.
+                </div>
+            </div>
             <p>A final note about Autohotkey - It's really cool and I encourage you to learn how to use it to automate your other tasks. However, with its functionality comes some downsides. It's a popular choice among cheaters, so I should let you know that <strong>if you find you can't launch some of your favorite games</strong>, check to make sure this script isn't running and exit it by right-clicking on the "H" icon in the taskbar.</p>
-
+            
             <br>
-            <h5>That's it! I hope you'll enjoy being able to launch your mods with next to no effort. Check out the next journey when we get to some actual modding.</h5>
+            <h5>That's it! I hope you'll enjoy being able to quickly iterate on your mods with next to no effort. Check out the next journey when we get to some actual modding.</h5>
             <br>
             <button class="left"><a href="index.html">Index</a></button>
             <button class="right"><a href="lesson1.html">Next -&gt;</a></button>
