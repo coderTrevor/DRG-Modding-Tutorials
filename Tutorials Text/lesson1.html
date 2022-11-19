@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- Materialize -->
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+        <!-- Mine -->
+        <link type="text/css" rel="stylesheet" href="css/main.css">
+
+        <!--Let browser know website is optimized for mobile-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+
+    <body>
+
+        <div class="container">
+            <h3>CoderTrevor's Adventures in Deep Rock Galactic Modding</h3>
+
+            <h4>Journey 1: Where am I?</h4>
+            <hr>
+
+            <p>By the end of this journey, you'll be able to see your character's position in the world.</p>
+            <p>You'll also add some features to the HUD which will help you to develop the rest of your mod, and you'll be able to see the HUD in caves, which if you followed the guide on mod.io, you may have noticed doesn't work out of the box.</p>
+
+            <h5>Part 1: Revisiting the HUD</h5>
+
+            <p>I think I've mentioned before that you should have followed the <a href="https://drg.old.mod.io/guides/how-to-blueprint-mod">blueprinting guide</a> on mod.io before coming here.</p>
+
+            <p>Let's start this journey off with a quick review:</p>
+
+            <ol>
+                <li>Create a folder in the Content folder named after your mod. I'll refer to it as <span class="code">AdventurousMod</span> here but substitute &quot;AdventurousMod&quot; with whatever you want throughout these adventures.</li>
+                <li>In the <span class="code">AdventurousMod</span> folder, create an actor blueprint called <span class="code">BP_AdventurousMod</span>.</li>
+                <li>Create a HUD widget called <span class="code">WBP_AdventurousModHUD</span>.
+                    <br>
+                    <a href="images/lesson1/Folder1.png"><img src="images/lesson1/Folder1.png" alt="Your project folders should look like this"></a>
+                </li>                
+                <li>Add a few lines of text to the left side of the screen and assign them each variables, called <span class="code">txtOutput1</span>, <span class="code">txtOutput2</span>, and <span class="code">txtOutput3</span>.
+                    <a href="images/lesson1/WBP_HUD.png"><img src="images/lesson1/WBP_HUD.png" alt="Screenshot of WBP_AdventurousModHUD"></a>
+                </li>
+
+                <li>Open up <span class="code">BP_AdventurousMod</span> and edit the blueprint so it displays the HUD when the game begins. Save a reference to the widget as <span class="code">HUD Ref</span>.
+                    <a href="images/lesson1/Spawn_HUD.png"><img src="images/lesson1/Spawn_HUD.png" alt="Blueprint to spawn HUD widget"></a>
+                </li>
+
+                <li>Go back to the <span class="code">Content</span> folder and create the <span class="code">InitSpacerig</span> actor blueprint.
+                    <br>
+                    <img src="images/lesson1/Folder2.png" alt="Create the InitSpacerig actor">
+                </li>
+
+                <li>Open the <span class="code">InitSpacerig</span> blueprint and make it spawn an instance of your mod.
+                    <br>
+                    <a href="images/lesson1/Spawn_AdventurousMod.png"><img src="images/lesson1/Spawn_AdventurousMod.png" alt="Spawning you mod"></a>
+                </li>
+
+                <li>Build and launch your mod and you should see the HUD:
+                    <br>
+                    <img src="images/lesson1/HUD_Overlay_1.jpg">
+                </li>
+            </ol>
+
+            <p>This should have been a review for you, so hopefully it was easy for you to follow along.</p>
+
+            <h5>Part 2: Updating text on the HUD and keeping the blueprint tidy</h5>
+
+            <p>Now, we can use this handy HUD to display information for our own benefit as we develop our mod.</p>
+
+            <p>Programming tradition dictates that every journey begins with printing "Hello World." Who am I to break with tradition?</p>
+
+            <ol>
+                <li>Open the <span class="code">BP_AdventurousMod</span> blueprint and add some nodes to set the text of each text block:
+                <br>
+                <a href="images/lesson1/SetText_1.png"><img src="images/lesson1/SetText_1.png" alt="Setting text on HUD"></a>
+                </li>
+
+                <li>If you compile this blueprint and launch your mod, you should see the updated text:
+                    <br>
+                    <img src="images/lesson1/HUD_Overlay_2.jpg" alt="Hello whale pipers!">
+                </li>
+
+                <li>Now zoom out to view the entire blueprint:
+                    <a href="images/lesson1/BP_AdventurousMod1_ZoomedOut.png"><img src="images/lesson1/BP_AdventurousMod1_ZoomedOut.png" alt="An overly-complicated blueprint"></a>
+                    <br>
+                    Isn't it starting to look a little... big? I mean it's only really doing two things, creating the HUD and setting some text, but look how complicated it looks!
+                </li>
+
+                <li>One thing we could do is add comments. Drag-select the blocks on the left related to HUD-creation, and press c. Then, type "Create HUD."</li>
+                <li>Next, select the boxes on the right and add the comment "Print Hello Whale Piper."
+                    <br>
+                    <a href="images/lesson1/BP_AdventurousMod1_Commented.png"><img src="images/lesson1/BP_AdventurousMod1_Commented.png" alt="Commented blueprint"></a>
+                    <br>
+                    That solves the issue of the complexity; now we can see at a glance that this blueprint is only doing two things, and we don't need to think about it any further unless we want to change one of those behaviors. Comments are great, and you should use them liberally. However, we haven't really addressed how needlessly <em>big</em> this blueprint has become. We can do better!
+                </li>
+                <li>Delete the two comments you just created (sorry).</li>
+                <li>Again, drag-select the boxes related to HUD creation, only this time, right-click on one of the boxes and select "Collapse to Macro."</li>
+                <li>Name your new macro "Create HUD."</li>
+                <li>Repeat this process for the boxes on the right and name the macro 'Print &quot;Hello Whale Piper&quot;'</li>
+                
+                <div class="card">
+                    <div class="card-content">
+                    <p>These didn't really have to be macros. You could have selected "collapse nodes" and accomplished roughly the same thing. You could have also collapsed them to functions. We'll learn more about the differences between these three options later.</p>
+                    </div>
+                </div>
+
+                <li>Tighten up the node placement and bask in the glory of your super-clean blueprint:
+                    <br>
+                    <a href="images/lesson1/BP_AdventurousMod1_Macros.png"><img src="images/lesson1/BP_AdventurousMod1_Macros.png" alt="A beautiful blueprint"></a>
+                </li>
+            </ol>
+
+            <div class="card">
+                <div class="card-content">
+                    As you work with blueprints, you'll find that they become messy very easily, and you may be tempted to leave them this way. Don't. <strong>Fight the entropy!</strong>
+                    Taking a little bit of time to keep your code clean will make working with it easier and more enjoyable, and you'll get more done.
+                </div>
+            </div>
+
+            <p>You may have noticed the code in the <span class="code">Print &quot;Hello Whale Piper&quot;</span> macro seems very repetive. We'll address that in the next journey.</p>
+
+            <h5>Part 3: Printing the player's position</h5>
+
+            <p>If you've made it this far, you're probably eager to actually have something interesting happen! Let's do that now:</p>
+
+            <ol>
+                <li>Open the <span class="code">AdventurousMod</span> folder and create a blueprint for a new actor called <span class="code">BP_PlayerPosition</span>. Open this blueprint.</li>
+                <li>Add a <span class="code">Get Player Character</span> node and promote the output to a variable called <span class="code">Player Character Ref</span>. Drag out from the BeginPlay event to set the reference on script execution.
+                    <br>
+                    <a href="images/lesson1/BP_PlayerPosition_1.png"><img src="images/lesson1/BP_PlayerPosition_1.png" alt="Storing reference to Player Character"></a>
+                </li>
+
+                <li>We also need to get a reference to our mod's actor. Add a <span class="code">Get Actor of Class</span> node, set <span class="code">BP_AdventurousMod</span> for the class, and promote the output to a variable named <span class="code">AdventurousMod Ref</span>. Have this node execute after setting <span class="code">Player Character Ref</span>.
+                    <br>
+                    <a href="images/lesson1/BP_PlayerPosition_2.png"><img src="images/lesson1/BP_PlayerPosition_2.png" alt="Storing reference to our mod"></a>
+                </li>
+                
+                <li>
+                    Drag in a new <span class="code">get</span> for your <span class="code">Player Character Ref</span> near the <span class="code">Event Tick</span> node and drag off a node called <span class="code">GetActorLocation</span>.
+                    <br>
+                    <img src="images/lesson1/BP_PlayerPosition_3.png" alt="Get Player Location">
+                </li>
+
+                <li>
+                    Now, drag in your reference to the <span class="code">BP_AdventurousMod</span> actor. From here, drag out the following chain of nodes:
+                    <span class="code">HUD Ref</span> &rarr; <span class="code">Txt Output 1</span> &rarr; <span class="code">SetText</span>.
+                    <img src="images/lesson1/BP_PlayerPosition_4.png" alt="Begin wiring Set Text">
+                </li>
+
+                <li>
+                    Next, wire up the <span class="code">Return Value</span> of <span class="code">GetActorLocation</span> to the <span class="code">In Text</span> of the <span class="code">SetText (Text)</span> node. You'll notice that this will automatically insert a node to convert the vector to a Text object. Cool!
+                </li>
+
+                <li>
+                    We want the player's position on screen to be updated every frame, so drag the execution pin of <span class="code">Event Tick</span> to that of <span class="code">SetText</span>. The whole blueprint should now look like this:
+                    <a href="images/lesson1/BP_PlayerPosition_5.png"><img src="images/lesson1/BP_PlayerPosition_5.png" alt="Final BP_PlayerPosition blueprint"></a>
+                    <br>We're now done with this blueprint. Don't forget to compile and save it.
+                </li>
+
+                <li>Just one more thing: we need to spawn an actor for our new blueprint! Open up the <span class="code">BP_AdventurousMod</span> blueprint.</li>
+                <li>Go to the blueprint's Event Graph and delete the <span class="code">Print &quot;Hello Whale Piper&quot;</span> node.</li>
+                <li>Drag the execution pin off the <span class="code">Create HUD</span> macro and add a <span class="code">Spawn Actor from Class</span> node. Set the class to BP_PlayerPosition.
+                    <br>
+                    <a href="images/lesson1/BP_AdventurousMod2.png"><img src="images/lesson1/BP_AdventurousMod2.png" alt="Spawning BP_PlayerPosition"></a>
+                </li>
+                <li>That's enough for the mod to function, but you can optionally erase the <span class="code">Text</span> from the <span class="code">Content</span> of <span class="code">txtOutput2</span> and <span class="code">txtOutput3</span> on the HUD since our mod won't use them.
+                    <br>
+                    <a href="images/lesson1/WBP_HUD_2.png"><img src="images/lesson1/WBP_HUD_2.png" alt="Updated HUD blueprint"></a>
+                </li>
+            </ol>
+
+            <p>And that's it! Make sure all your blueprints have been compiled, then build and launch your mod! As you run around the space rig, you'll see coordinates for the player being updated. You might notice that the game uses centimeters for units.</p>
+            <img src="images/lesson1/HUD_In_Spacerig.png" alt="HUD in Spacerig">
+            <h5>Part 4: Showing the HUD in caves</h5>
+
+            <p>At this point, you have your fancy HUD in the spacerig, but you won't be able to see it in caves.</p>
+            <p>For one thing, we never made an InitCave actor blueprint. Let's make one now and spawn the <span class="code">BP_AdventurousMod</span> from it.</p>
+            <a href="images/lesson1/BP_InitCave.png"><img src="images/lesson1/BP_InitCave.png" alt="InitCave blueprint"></a>
+
+            <p>This was a necessary step, but it's still not sufficient to show the HUD in caves. Let's fix that.</p>
+
+            <p>This next part I can't take credit for. I actually couldn't figure it out why the HUD wasn't working in caves until I checked on Discord and saw <a href="https://discord.com/channels/676880716142739467/938150434261065778/1022641655096037377">this post</a> from GoldBl4d3.</p>
+
+            <div class="card">
+                <div class="card-content">
+                    The <a href="https://discord.com/invite/hE8tHdT">DRG Modding discord</a> is where you'll find all of the state-of-the-art info on DRG Modding.
+                </div>
+            </div>
+            
+            <p>As GoldBl4d3 has explained, "Trying to add widgets during the mission loading screen will result in failure." This method keeps trying to add the HUD until becomes visible. It adds a short delay between each iteration to prevent looping forever.</p>
+
+            <a href="images/lesson1/Create_HUD2.png"><img src="images/lesson1/Create_HUD2.png" alt="HUD creation for caves"></a>
+
+            <p>I recreated GoldBl4d3's solution from memory. It's actually a little different from what GoldBl4d3 posted, but it seems to accomplish the same thing. That's the great thing about coding: there's usually lots of different ways to solve a problem.</p>
+
+            <br>
+            <p>Launch a mission and try it out.</p>
+            <img src="images/lesson1/HUD_In_Cave.png" alt="HUD in a cave">
+
+            <h5>That's it for this journey! Now we can run around the level and get a general idea of where things are, and we can make our HUD show up in caves. In our next excursion, we'll use this knowledge to spawn an actor in the spacerig.</h5>
+            <br>
+            <button class="left"><a href="lesson0.html">&lt;- Prev</a></button>
+            <!--<button class="right"><a href="lesson2.html">Next -&gt;</a></button>-->
+            <br>
+            <br><br>
+            
+        </div>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    </body>
+</html>

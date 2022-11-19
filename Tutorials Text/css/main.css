@@ -37,3 +37,11 @@ span.code {
 strong {
     font-weight: bold;
 }
+
+img {
+    max-width: 100%;
+}
+
+ol li {
+    margin-top: 1rem;
+}
