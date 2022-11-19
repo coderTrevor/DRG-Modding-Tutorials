@@ -32,7 +32,7 @@
             <br>
             <hr>
             <p>If you get stuck anywhere along the way, <a href="https://github.com/coderTrevor/DRG-modding-tutorial-project/releases/download/Journey_0/Journey_0_Complete.zip">here</a> is how my project folder looks after completing this journey.
-                Note that you'll need to change <span class="code">DRGModdingAutomationScripts\Configs\LocalConfig.ini</span> to match the UE4 and DRG install paths on your system.</p>
+                Note that you'll need to change <code>DRGModdingAutomationScripts\Configs\LocalConfig.ini</code> to match the UE4 and DRG install paths on your system.</p>
             <hr>
             <br>
             <h5>Part 1: Setting up <a href="https://github.com/DRG-Modding/FSD-Template">FSD-Template</a> &amp; <a href="https://github.com/DRG-Modding/DRGModdingAutomationScripts">DRG modding automation scripts</a></h5>
@@ -44,15 +44,15 @@
             <br>
             <h6>Part 1b: Configure DRG modding automation scripts.</h6>
 
-            <p>This is really easy. First, navigate to your project folder and then open <span class="code">DRGModdingAutomationScripts\UtilityBats</span> and then run <span class="code">MakeDefaultConfigFiles.bat</span>.</span></p>
-            <p>Next, go up one folder and open <span class="code">Configs\LocalConfig.ini</span> in your favorite text editor.</p>
+            <p>This is really easy. First, navigate to your project folder and then open <code>DRGModdingAutomationScripts\UtilityBats</code> and then run <code>MakeDefaultConfigFiles.bat</code>.</code></p>
+            <p>Next, go up one folder and open <code>Configs\LocalConfig.ini</code> in your favorite text editor.</p>
 
-            <p>Change the first line to <span class="code">ProjectFile=..\FSD.uproject</span>. Change the next two lines as needed. On my system, the file ends up looking like this:</p>
+            <p>Change the first line to <code>ProjectFile=..\FSD.uproject</code>. Change the next two lines as needed. On my system, the file ends up looking like this:</p>
             <div class="code">ProjectFile=..\FSD.uproject
 UnrealEngineLocation=C:\Program Files\Epic Games\UE_4.27\
 SteamInstall=C:\Program Files (x86)\Steam\steamapps\common\Deep Rock Galactic\</div>
 
-            <p>Now, go back to the <span class="code">DRGModdingAutomationScripts</span> directory and run <span class="code">QuickTestMod.bat</span>. When you see <span class="code">(F = file, D = directory)?</span> press "f". You should now see your mod launched!</p>
+            <p>Now, go back to the <code>DRGModdingAutomationScripts</code> directory and run <code>QuickTestMod.bat</code>. When you see <code>(F = file, D = directory)?</code> press "f". You should now see your mod launched!</p>
 
             <h5>Part 2: Using <a href="https://www.autohotkey.com/">AutoHotkey</a> to launch your mod with a hotkey</h5>
 
