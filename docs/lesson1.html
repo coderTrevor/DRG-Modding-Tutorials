@@ -128,7 +128,7 @@
 
             <ol>
                 <li>Open the <code>AdventurousMod</code> folder and create a blueprint for a new actor called <code>BP_PlayerPosition</code>. Open this blueprint.</li>
-                <li>Add a <code>Get Player Character</code> node and promote the output to a variable called <code>Player Character Ref</code>. Drag out from the BeginPlay event to set the reference on script execution.
+                <li>Add a <code>Get Local Player Character</code> node and promote the output to a variable called <code>Player Character Ref</code>. Drag out from the <code>BeginPlay</code> event to set the reference on script execution.
                     <br>
                     <a href="images/lesson1/BP_PlayerPosition_1.png"><img src="images/lesson1/BP_PlayerPosition_1.png" alt="Storing reference to Player Character"></a>
                 </li>
@@ -146,7 +146,7 @@
 
                 <li>
                     Now, drag in your reference to the <code>BP_AdventurousMod</code> actor. From here, drag out the following chain of nodes:
-                    <code>HUD Ref</code> &rarr; <code>Txt Output 1</code> &rarr; <code>SetText</code>.
+                    <code>HUD Ref</code> &rarr; <code>Get Txt Output 1</code> &rarr; <code>SetText</code>.
                     <img src="images/lesson1/BP_PlayerPosition_4.png" alt="Begin wiring Set Text">
                 </li>
 
