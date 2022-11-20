@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- Materialize -->
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+        <!-- Mine -->
+        <link type="text/css" rel="stylesheet" href="css/main.css?v=1">
+
+        <!--Let browser know website is optimized for mobile-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+
+    <body>
+
+        <div class="container">
+            <h3>CoderTrevor's Adventures in Deep Rock Galactic Modding</h3>
+
+            <h4>Journey 2: Let there be cube!</h4>
+            <hr>
+
+            <p>By the end of this journey, you'll be able to create a new actor from scratch and spawn it anywhere in the world.</p>
+
+            <br><hr>
+                <p>For reference, you can download archives of my project files from <a href="https://github.com/coderTrevor/DRG-modding-tutorial-project/releases/tag/Journey_1">before this journey began</a> and <a href="https://github.com/coderTrevor/DRG-modding-tutorial-project/releases/tag/Journey_2">after its completion</a>.
+            <hr><br>
+
+            <h5>Part 1: Creating an actor to spawn</h5>
+            
+            <p>In our last excursion, we figured out how to find the player's position in the space rig. Let's put that information to good use and add something new to the abyss bar.</p>
+            <p>First, we'll need something to add. Let's create a simple cube actor from scratch:</p>
+            
+            <ol>
+                <li>Go to the <code>AdventurousMod</code> folder and create a new blueprint. Since we want to add it to the world, choose <code>Actor</code> as the parent. Name your new blueprint <code>BP_AdventureCube</code> (or, you know, whatever you want).
+                    <br>
+                    <img src="images/lesson2/New_BP_Cube.png" alt="New Cube blueprint">
+                </li>
+
+                <li>Open up your new blueprint in the editor.</li>
+                <li>Near the top-left, click the green button that says <code>Add Component</code>.</li>
+                <li>In the dropdown that appears, choose <code>Cube</code> under <code>Common</code>.
+                    <br>
+                    <img src="images/lesson2/BP_Cube_Adding_Cube.png" alt="Adding cube component">
+                </li>
+                <li>You can leave the default name of <code>Cube</code> for this new component. Unsurprisingly, you'll see a cube in the viewport for your new actor:
+                    <br>
+                    <img src="images/lesson2/BP_Cube_Cube_Added.png" alt="Cube component added">
+                </li>
+                <li>Remember to compile and save BP_AdventureCube, then you can close the blueprint editor; we're done here.</li>                
+            </ol>
+
+            <p>Okay, that was crazy-easy. We're bound to run into some more difficulty as we go on.</p>
+
+            <h5>Part 2: Spawning the new actor in the Abyss Bar.</h5>
+
+            <p>Before we can spawn anything in our world, we'll need to know where to spawn it. We could just spawn it at the origin, 0,0,0, but where's that?</p>
+
+            <p>Luckily, thanks to our last adventure, we have an easy way of getting world coordinates. We can just launch our mod, run around to roughly where we want to spawn something, and take note of the player position.</p>
+
+            <p>Do that now and pick a place in the Abyss Bar to spawn our cube. I'm going to use this empty area to the left of the bar:</p>
+
+            <a href="images/lesson2/Cube_Coords.png"><img src="images/lesson2/Cube_Coords.png" alt="New Cube coordinates"></a>
+
+            <p>I bet from here you can figure it out all on your own. But here's the steps we'll follow to spawn the cube in this location:</p>
+
+            <ol>
+                <li>Open <code>BP_AdventurousMod</code> in the blueprint editor and go to the <code>Event Graph</code>.</li>
+                <li>After the node which spawns our player position blueprint, drag out another <code>Spawn Actor from Class</code> node and set <code>BP_AdventureCube</code> as the class.</li>
+                <li>Split the <code>Spawn Transform</code> struct and for <code>Spawn Transform Location</code>, fill in the coordinates you determined earlier.</li>
+                <li>Remember to set the <code>Collision Handling Override</code> to always spwan, and your blueprint should now look like this:
+                    <br>
+                    <a href="images/lesson2/BP_AdventurousMod_Spawns.png"><img src="images/lesson2/BP_AdventurousMod_Spawns.png" alt="BP_AdventurousMod spawning BP_AdventureCube"></a>
+                </li>
+                <li>Compile and save this blueprint and launch your mod. Take a deep breath and prepare for some serious debugging, since there's no way it was this easy...</li>
+            </ol>
+
+            <p>Holy crap, it worked!</p>
+            <br>
+            <a href="images/lesson2/Cube_Spawned.png"><img src="images/lesson2/Cube_Spawned.png" alt="Cube Spawned"></a>
+            <p>Buy yourself a <del>strong beer</del> management-approved beverage to celebrate.</p>
+            
+            <p>Now you know how to create totally-custom actors and spawn them into the world. Admittedly, finding coordinates manually like this isn't really practical for gameplay mods, so our next journey will explore spawning in a more dynamic way.</p>
+            
+            <h5>The end of another journey! This one was short, but I thought it would be good to have some short ones sprinkled in. Next time, we'll head to the caves and spawn some glyphids.</h5>
+            <br>
+            <button class="left"><a href="lesson0.html">&lt;- Prev</a></button>
+            <button class="right"><a href="index.html">Index</a></button>
+            <br>
+            <br><br>
+            
+        </div>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    </body>
+</html>
