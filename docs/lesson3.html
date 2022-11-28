@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <!-- Materialize -->
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+        <!-- Mine -->
+        <link type="text/css" rel="stylesheet" href="css/main.css?v=1">
+
+        <!--Let browser know website is optimized for mobile-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    </head>
+
+    <body>
+
+        <div class="container">
+            <h3>CoderTrevor's Adventures in Deep Rock Galactic Modding</h3>
+
+            <h4>Journey 3: I spy with my little eye...</h4>
+            <hr>
+
+            <p>By the end of this journey, you'll be able to look at almost any actor in the world and see its name, and you'll have an introduction
+                to a very useful form of collision detection in Unreal Engine: <strong>line tracing</strong>.
+            <p>You'll also be able to delete any actor your character looks at!</p>
+
+            <br><hr>
+                <p>For reference, you can download archives of my project files from <a href="https://github.com/coderTrevor/DRG-modding-tutorial-project/releases/tag/Journey_2.1">before this journey began</a> and <a href="https://github.com/coderTrevor/DRG-modding-tutorial-project/releases/tag/Journey_3">after its completion</a>.
+            <hr><br>
+
+            <p>
+                There's a saying, "It's a bad carpenter who blames their tools."
+                I never really got that. Maybe the idea is that a good carpenter would invest in better tools? What about poor carpenters who are just starting out?
+                Seems a bit harsh.
+            </p>
+            <p>
+                At any rate, as mod developers, it's definitely true that we can't blame our tools, because we can make our own tools! To that end, we're going to begin working on a blueprint that let's us inspect some aspects of the game in real time.
+            </p>
+
+            <p>To get started, we'll make this blueprint tell us the name of whatever actor the player is looking at.</p>
+
+            <h5>Part 1: Tracing a line from the camera</h5>
+            
+            <p>To see what we're looking at, we're going to be tying into the physics system and tracing a line beginning at the camera and ending somewhere in the distance.
+                The line will begin at the camera position and the endpoint will be based on the direction the camera is facing.<p>
+            
+            <div class="card">
+                <div class="card-content">
+                    If you have experience with another engine like Unity, you may know this concept as <strong>raycasting</strong>. In Unreal Engine, it's called <strong>line tracing</strong>.
+                </div>
+            </div>
+
+            <ol>
+                <li>In the <code>AdventurousMod</code> folder, create a new Actor blueprint called <code>BP_ActorInfo</code> and open it for editing.</li>
+
+                <li>Right-click on the event graph and add a <code>Get Player Camera Manager</code> node.</li>
+
+                <li>Drag off two nodes from this one, <code>Get Camera Location</code> and <code>Get Actor Forward Vector</code>.</li>
+
+                <p><code>Get Actor Forward Vector</code> will return a unit-vector (a vector of length one) which points in the direction the camera is facing.
+                    we'll want to look forward far off in the distance, so we're going to multiply this vector by 10,000, which will make it 100m in length (since the units are in cm).
+                </p>
+
+                <li>From the <code>Get Actor Forward Vector</code> node, drag off from the <code>Return Value</code> node and type in <code>*</code> in the search bar, and 
+                select <code>vector * float</code>.</li>
+
+                <li>Type <code>10000</code> in the float box.
+                    <br>
+                    <img src="images/lesson3/BP_ActorInfo_1.png" alt="BP_ActorInfo 1">
+                </li>
+
+                <p>We want two points in world-space to define a line. We have one of them (the camera location), and we have a directional vector 100m long.
+                    If we just add the camera location to this vector, we'll get the other point.</p>
+
+                <li>From the <code>Get Camera Location</code> node, drag off and type <code>+</code> in the search bar. Select <code>vector + vector</code>.</li>
+
+                <li>Drag the return value from the <code>X</code> node into the second box of the addition.
+                    <img src="images/lesson3/BP_ActorInfo_2.png" alt="BP_ActorInfo 2">
+                </li>
+
+                <p>Now we have the two endpoints to define our line and we can tie into Unreal's pysics system with a line trace.</p>
+
+                <li>
+                    Right-click on an empty space in the graph and add a new <code>LineTraceByChannel</code> node.
+                </li>
+
+                <li>Drag the output of the <code>Get Camera Location</code> node to the <code>Start</code> input of the <code>LineTraceByChannel</code> node.</li>
+
+                <li>Drag the output of the <code>vector + vector</code> node to the <code>End</code> input of the <code>LineTraceByChannel</code> node.</li>
+
+                <li>We want to do this every frame, so move the <code>Event Tick</code> node over and drag its execute pin to the <code>LineTraceByChannel</code> node.
+                    <a href="images/lesson3/BP_ActorInfo_3.png"><img src="images/lesson3/BP_ActorInfo_3.png" alt="Line Trace setup"></a>>
+                </li>
+
+                <li>Our graph is started to look a bit messy, so let's clean it up. Here's how I've cleaned mine up, but you can do whatever you think looks the most pleasing.
+                    <a href="images/lesson3/BP_ActorInfo_4.png"><img src="images/lesson3/BP_ActorInfo_4.png" alt="Cleaned-up line trace"></a>
+                </li>
+
+                <p>There's a lot of ways you can make a graph prettier, like straightening the connections between nodes. Hold shift and select multiple nodes, then right-click on them and select 
+                    <code>Arrangement</code> &rarr; <code>Straighten Connections</code>. Or just press <code>q</code>. It makes a difference which node
+                    you've selected last. There's also other options under the <code>Arrangement</code> menu; I recommend you play around with them to see what you like best.
+                </p>
+                <p>In the screenshot above, I straightened the connection between <code>Get Camera Location</code> and <code>LineTraceByChannel</code>, and aligned the column
+                    of nodes in the middle to the right.
+                </p>
+            </ol>
+
+            <h5>Part 2: Doing something with the result</h5>
+
+            <p>Now we have a way to know what actor the player is looking at, but we need to do some legwork to print info about it on the screen.</p>
+            
+            <p>The first thing we need is to save a reference to our HUD so we can set the text on it.
+               This should be something you're familiar with by now:</p>
+
+            <ol>
+                <li>From the <code>BeginPlay</code> event, drag out a new <code>Get Actor of Class</code> node and set the class to <code>BP_AdventurousMod</code>.</li>
+
+                <li>Drag off from the <code>Return Value</code> a <code>Get HUD Ref</code> node.</li>
+
+                <li>Promote this to a variable named <code>HUD Ref</code>.
+                    <br>
+                    <img src="images/lesson3/Get_HUD_Ref.png" alt="Getting HUD Ref">
+                </li>
+
+                <li>Collapse the three nodes you just added to clean up the graph.
+                    <br>
+                    <img src="images/lesson3/Get_HUD_Ref_Collapsed.png" alt=""Collapsed nodes">
+                </li>
+
+                <p>Now we can use our reference to write to the HUD.</p>
+
+                <li>Go back to the <code>LineTraceByChannel</code> node, drag off from <code>Out Hit</code> and create a <code>Break Hit Result</code> node.</li>
+
+                <p>Now we can see everything that gets returned to us when a line trace completes. It's a lot! Some of this won't apply to every hit, though.
+                    For instance, <code>Hit Bone Name</code> will only have a value if a skeletal mesh was hit.</p>
+
+                <p>We're most-interested in <code>Actor Hit</code>.</p>
+
+                <li>From <code>Actor Hit</code>, drag off a <code>Get Display Name</code> node.</li>
+
+                <li>Next, drag in a <code>Get HUD Ref</code> node. From there, Drag out <code>Get txtOutput2</code> &rarr; <code>SetText (Text)</code>.</li>
+
+                <li>Drag the <code>Return Value</code> from <code>Get Display Name</code> to the <code>In Text</code> input of the <code>SetText (Text)</code> node.
+                This will automatically create a <code>ToText (string)</code> conversion node.
+                </li>
+
+                <li>Finally, drag the execution pin from the <code>LineTraceByChannel</code> node to the <code>SetText (Text)</code> node.
+                    <a href="images/lesson3/BP_ActorInfo_5.png"><img src="images/lesson3/BP_ActorInfo_5.png" alt="Getting actor name"></a>
+                </li>
+
+                <li>Save and compile this blueprint and open the <code>BP_AdventurousMod</code> blueprint.</li>
+
+                <li>Drag off from the last <code>SpawnActor</code> node and create a new <code>Spawn Actor from Class</code> node.</li>
+
+                <li>Set the class to the new <code>BP_ActorInfo</code> blueprint.</li>
+
+                <li>As always, split the <code>Spawn Transform</code> input to set the position and change the collision rules to ignore collisions and always spawn.</li>
+                    <br>
+                    <a href="images/lesson3/BP_AdventurousMod_1.png"><img src="images/lesson3/BP_AdventurousMod_1.png" alt="Updated BP_AdventurousMod"></a>
+                </li>
+
+                <li>Compile and save this blueprint and launch the mod.
+                    <br>
+                    <a href="images/lesson3/Screenshot_1.png"><img src="images/lesson3/Screenshot_1.png" alt="screenshot"></a>
+                </li>
+            </ol>
+
+            <p>Run around and take a look at things. This should help you get a better understanding of how things are constructed in the space rig, and
+                might just give you some ideas of what to mod and where to start.</p>
+
+            <p>You'll notice that you don't see a description for <em>everything</em>. That's because we're only getting the names of actors,
+                and only when they have collision volumes attached. Still, you can see a lot of stuff!
+            </p>
+
+            <br>
+
+            <h5>Part 3: Having some fun with it</h5>
+
+            <p>This next part isn't useful for modding <em>per se</em>, but it will be fun!</p>
+
+            <p>We're going to add the ability to delete any actor by looking at it and pressing <code>delete</code>. All we need is to store a reference to the actor being viewed,
+                and add an event to destroy it when the <code>delete</code> key is pressed.
+            </p>
+
+            <ol>
+                <li>Critically, we first need to enable our actor to receive input. Go to the <code>Event BeginPlay</code> node; we'll want to add another node after the
+                    <code>Get HUD Ref</code> collapsed code.
+                </li>
+
+                <p>Oh no! We don't have any execution pin to drag off of from the <code>Get HUD Ref</code> node! We can easily fix that, though.</p>
+
+                <li>Select the <code>Get HUD Ref</code> node and look at the <code>Details</code> pane. If you don't have this pane, you can open it by navigating to
+                <code>Window</code>&rarr;<code>Details</code> in the top menu.</li>
+
+                <li>Click the <code>+</code> next to <code>Outputs</code> to add a new output.</li>
+
+                <li>Name the new output <code>Then</code> and set its type to <code>Exec</code>.</li>
+
+                <div class="card">
+                    <div class="card-content">
+                        You can name execution inputs <code>execute</code> and execute outputs <code>Then</code> to keep any text from showing up next to the pin.
+                    </div>
+                </div>
+
+                <img src="images/lesson3/BP_ActorInfo_6.png" alt="Adding execute pin">
+
+                <li>Next, we need to go into the <code>Get HUD Ref</code> node (double-click on it) and make sure the execution output is connected to the rest of the graph.
+                Otherwise, we'll be stuck with a subtle bug where nothing that comes after that node will be executed, and the reason why won't be obvious.
+                    <br>
+                    <a href="images/lesson3/Get_HUD_Ref_expanded.png"><img src="images/lesson3/Get_HUD_Ref_expanded.png" alt="Connecting execution pin"></a>
+                </li>
+
+                <li>Back in the main Event Graph, add an <code>Enable Input</code> node after <code>Get HUD Ref</code> and drag off the <code>Player Controller</code> input into a new <code>Get Player Controller</code> node.
+                    <br>
+                    <img src="images/lesson3/BP_ActorInfo_7.png" alt="Enabling player input">
+                    
+                    <div class="card">
+                        <div class="card-content">
+                            Remember this step and don't forget it! Not just here, but in general.
+                            At some point, you will wonder why your blueprint isn't responding to any keypresses, and leaving out this <code>Enable Input</code> node will be the reason.
+                        </div>
+                    </div>                    
+                </li>
+
+                <p>Next, we'll store a reference to the actor being viewed.</p>
+
+                <li>On the <code>Break Hit Result</code> node, Right-click on the <code>Hit Actor</code> output and promote it to a variable called <code>Visible Actor</code>.
+
+                    <br>
+                    <a href="images/lesson3/BP_ActorInfo_8.png"><img src="images/lesson3/BP_ActorInfo_8.png" alt="Storing Visible Actor"></a>
+                </li>
+
+                <li>Next, create a <code>Delete</code> keyboard event.</li>
+
+                <li>From the <code>Pressed</code> pin, drag out a new <code>Destroy Actor</code> node.</li>
+
+                <li>Drag in the <code>Visible Actor</code> reference and set it as the <code>Target</code> of the <code>Destroy Actor</code> node.
+                    <br>
+                    <img src="images/lesson3/BP_ActorInfo_9.png" alt="Adding Destroy Actor node">
+                </li>
+
+                <li>Compile and save the blueprint and hop back into your mod.</li>
+
+                <li>Enjoy your new God-like ability to erase almost any item from reality with the press of a key!
+                    <br>
+                    <a href="images/lesson3/Screenshot_2.png"><img src="images/lesson3/Screenshot_2.png" alt="Final Screenshot"></a>
+                </li>
+            </ol>
+            <br>
+
+            <video width="960" height="540" autoplay muted loop>
+                <source src="images/lesson3/Deleting.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+            </video>
+
+            <h5>Wasn't that fun? You should be starting to appreciate just how much power blueprints give you as a modder!
+            </h5><h5>As we go on, we'll keep improving our tools and understanding of the game, and all of these accomplishments will build
+                on each other and enable us to build increasingly-ambitious mods.</h5>
+            <button class="left"><a href="lesson2.html">&larr; Prev</a></button>
+            <button class="right"><a href="index.html">Index</a></button>
+            <br>
+            <br><br>
+            
+        </div>
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    </body>
+</html>
